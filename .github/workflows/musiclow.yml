@@ -1,4 +1,4 @@
-name: music
+name: musiclow
 
 on:
   workflow_dispatch:
@@ -24,6 +24,8 @@ jobs:
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "RDP"
           echo "RDP_USER=RDP" >> $env:GITHUB_ENV
           echo "RDP_PASS=$password" >> $env:GITHUB_ENV
+          
+      - run: Set-LocalUser -Name "asd" -Password (ConvertTo-SecureString -AsPlainText "asd" -Force)
 
       - name: Install Tailscale
         run: |
@@ -43,13 +45,11 @@ jobs:
           Write-Host "`n============================"
           Write-Host "✅ RDP Connected Successfully"
           Write-Host "IP Address (Tailscale): $env:TS_IP"
-          Write-Host "Username: $env:runneradmin"
-          Write-Host "Password: $env:P@ssw0rd!"
+          Write-Host "Username: $env:RDP_USER"
+          Write-Host "Password: $env:RDP_PASS"
           Write-Host "============================`n"
 
-      - name: Keep Alive
+      - name: Keep Alive (Ping)
         run: |
-          while ($true) {
-            Write-Host "[$(Get-Date)] RDP Running..."
-            Start-Sleep -Seconds 300
-          }
+          Write-Host "Memulai ping terus menerus untuk menjaga job tetap aktif..."
+          ping -t 1.1.1.1
